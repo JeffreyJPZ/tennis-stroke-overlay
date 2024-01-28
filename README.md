@@ -1,3 +1,8 @@
+# Tennis Stroke Overlay
+
+## Description
+A tool for checking your tennis stroke forms against a reference image using BlazePose pose detection by overlaying two poses.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
