@@ -1,29 +1,48 @@
-import {useEffect, useState} from "react";
+import {useEffect, useReducer} from "react";
 import Dropzone from 'react-dropzone';
 import upload from '../assets/upload.svg';
 import './FileUpload.css';
 
+// Event handler for files
+function reducer(files : any, action : any) : any {
+    switch (action.key) {
+        case 'PREVIEW':
+            const newFiles : any = {};
+            for (let fileId in files) {
+                if (action.fileId === fileId) {
+                    newFiles[fileId] = {preview: action.preview};
+                } else {
+                    newFiles[fileId] = {preview: files[fileId].preview};
+                }
+            }
+            return newFiles;
+        default:
+            return files;
+    }
+}
+
 // Wrapper component for file uploads
 export default function FileUpload() {
-    const [comparisonFile, setComparisonFile] = useState({
-        preview: upload
-    });
-    const [referenceFile, setReferenceFile] = useState({
-        preview: upload
-    });
+    const [files, dispatch] = useReducer(reducer,
+        {'comparisonFile' : {preview: upload}, 'referenceFile' : {preview : upload}});
+
+    // Updates file previews by calling event handler
+    const handleOnDrop = (fileId : string, acceptedFiles : any[]) => {
+        dispatch( {key: 'PREVIEW', fileId: fileId, preview: URL.createObjectURL(acceptedFiles[0])} );
+    }
 
     // prevent memory leaks by deleting uri
     useEffect(() => {
-        URL.revokeObjectURL(comparisonFile.preview);
-        URL.revokeObjectURL(referenceFile.preview);
+        return () => {
+            URL.revokeObjectURL(files['comparisonFile'].preview);
+            URL.revokeObjectURL(files['referenceFile'].preview);
+        }
     });
 
     return (
         <div>
             <Dropzone onDrop={ (acceptedFiles) => {
-                // callback to make file preview fill dropzone
-                setComparisonFile(Object.assign(acceptedFiles[0],
-                    {preview: URL.createObjectURL(acceptedFiles[0])}));
+                handleOnDrop('comparisonFile', acceptedFiles);
             }}>
                 {({getRootProps, getInputProps, isDragActive}) => (
                     <form className={isDragActive ? "dragged" : "default"} id="fileUploadComparison">
@@ -34,17 +53,16 @@ export default function FileUpload() {
                                     <p>Drop the file here</p> :
                                     <p>Click, or drag and drop the comparison file here</p>
                             }
-                            <img src={comparisonFile.preview}
+                            <img src={files['comparisonFile'].preview}
                                  alt="Upload comparison file"
-                                 onLoad={() => { URL.revokeObjectURL(comparisonFile.preview) }}/>
+                                 onLoad={() => { URL.revokeObjectURL(files['comparisonFile'].preview) }}/>
                         </div>
                     </form>
                 )}
             </Dropzone>
 
             <Dropzone onDrop={(acceptedFiles) => {
-                setReferenceFile(Object.assign(acceptedFiles[0],
-                    {preview: URL.createObjectURL(acceptedFiles[0])}));
+                handleOnDrop('referenceFile', acceptedFiles);
             }}>
                 {({getRootProps, getInputProps, isDragActive}) => (
                     <form className={isDragActive ? "   dragged" : "default"} id="fileUploadReference">
@@ -55,9 +73,9 @@ export default function FileUpload() {
                                     <p>Drop the file here</p> :
                                     <p>Click, or drag and drop the reference file here</p>
                             }
-                            <img src={referenceFile.preview}
+                            <img src={files['referenceFile'].preview}
                                  alt="Upload reference file"
-                                 onLoad={() => { URL.revokeObjectURL(referenceFile.preview) }}/>
+                                 onLoad={() => { URL.revokeObjectURL(files['referenceFile'].preview) }}/>
                         </div>
                     </form>
                 )}
