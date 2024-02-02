@@ -1,0 +1,33 @@
+p {
+    color: black;
+}
+
+.default {
+    margin: 20%;
+    border: 4px dashed black;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    background-color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.dragged {
+    margin: 20%;
+    border: 4px dashed black;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    background-color: gray;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.notDragged {
+
+}
