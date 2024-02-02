@@ -21,7 +21,7 @@ export default function FileUpload() {
     return (
         <div>
             <Dropzone onDrop={ (acceptedFiles) => {
-                // callback to make image preview fill dropzone
+                // callback to make file preview fill dropzone
                 setComparisonFile(Object.assign(acceptedFiles[0],
                     {preview: URL.createObjectURL(acceptedFiles[0])}));
             }}>
@@ -31,11 +31,11 @@ export default function FileUpload() {
                             <input {...getInputProps()} />
                             {
                                 isDragActive ?
-                                    <p>Drop the image here</p> :
-                                    <p>Click, or drag and drop an image here</p>
+                                    <p>Drop the file here</p> :
+                                    <p>Click, or drag and drop the comparison file here</p>
                             }
                             <img src={comparisonFile.preview}
-                                 alt="Upload comparison image"
+                                 alt="Upload comparison file"
                                  onLoad={() => { URL.revokeObjectURL(comparisonFile.preview) }}/>
                         </div>
                     </form>
@@ -47,16 +47,16 @@ export default function FileUpload() {
                     {preview: URL.createObjectURL(acceptedFiles[0])}));
             }}>
                 {({getRootProps, getInputProps, isDragActive}) => (
-                    <form className={isDragActive ? "dragged" : "default"} id="fileUploadReference">
+                    <form className={isDragActive ? "   dragged" : "default"} id="fileUploadReference">
                         <div {...getRootProps()}>
                             <input {...getInputProps()} />
                             {
                                 isDragActive ?
-                                    <p>Drop the image here</p> :
-                                    <p>Click, or drag and drop an image here</p>
+                                    <p>Drop the file here</p> :
+                                    <p>Click, or drag and drop the reference file here</p>
                             }
                             <img src={referenceFile.preview}
-                                 alt="Upload reference image"
+                                 alt="Upload reference file"
                                  onLoad={() => { URL.revokeObjectURL(referenceFile.preview) }}/>
                         </div>
                     </form>
