@@ -1,0 +1,38 @@
+#viewerToolbar {
+
+}
+
+/**
+ * Styles for tablets
+ */
+@media (min-width: 480px) {
+
+}
+
+/**
+ * Styles for large tablets
+ */
+@media (min-width: 768px) {
+
+}
+
+/**
+ * Styles for monitors and laptops
+ */
+@media (min-width: 1024px) {
+    #viewerToolbar {
+        grid-column: 2;
+        grid-row: 2;
+        display: flex;
+
+        height: 10%;
+        margin: 1em;
+    }
+}
+
+/**
+ * Styles for large monitors
+ */
+@media (min-width: 1200px) {
+
+}

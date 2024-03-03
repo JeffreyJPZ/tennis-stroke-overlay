@@ -5,6 +5,7 @@ import './FileUpload.css';
 
 // Event handler for files
 function reducer(files : any, action : any) : any {
+    // TODO: conditionally select media element (preview) depending on file type
     switch (action.key) {
         case 'PREVIEW':
             const newFiles : any = {};
@@ -12,7 +13,7 @@ function reducer(files : any, action : any) : any {
                 if (action.fileId === fileId) {
                     newFiles[fileId] = {preview: action.preview};
                 } else {
-                    newFiles[fileId] = {preview: files[fileId].preview};
+                    newFiles[fileId] = {preview: files[fileId].preview}; // keeps same
                 }
             }
             return newFiles;
@@ -22,9 +23,9 @@ function reducer(files : any, action : any) : any {
 }
 
 // Wrapper component for file uploads
-export default function FileUpload() {
-    const [files, dispatch] = useReducer(reducer,
-        {'comparisonFile' : {preview: upload}, 'referenceFile' : {preview : upload}});
+export default function FileUpload(props : { name: string }) {
+    const [file, dispatch] = useReducer(reducer,
+        {[props.name] : {type: 'image', preview: upload}});
 
     // Updates file previews by calling event handler
     const handleOnDrop = (fileId : string, acceptedFiles : any[]) => {
@@ -34,52 +35,47 @@ export default function FileUpload() {
     // prevent memory leaks by deleting uri
     useEffect(() => {
         return () => {
-            URL.revokeObjectURL(files['comparisonFile'].preview);
-            URL.revokeObjectURL(files['referenceFile'].preview);
+            URL.revokeObjectURL(file[props.name].preview);
         }
     });
 
     return (
-        <div>
-            <Dropzone onDrop={ (acceptedFiles) => {
-                handleOnDrop('comparisonFile', acceptedFiles);
-            }}>
+        <div id={props.name + "Upload"} className="fileUpload">
+            <Dropzone
+                accept={
+                    { /* Specify allowed file types */
+                       'image/*': ['jpeg', 'jpg', 'png'],
+                        'video/*': ['mp4']
+                    }
+                }
+                onDrop={ (acceptedFiles) => {
+                    handleOnDrop(props.name, acceptedFiles);
+                }
+            }>
                 {({getRootProps, getInputProps, isDragActive}) => (
-                    <form className={isDragActive ? "dragged" : "default"} id="fileUploadComparison">
-                        <div {...getRootProps()}>
-                            <input {...getInputProps()} />
+                    <div className={isDragActive ? "dropzoneDragged" : "dropzone"} id={props.name + "Dropzone"} {...getRootProps()}>
+                        <input {...getInputProps()}/>
+                        <div className={props.name + "DraggedText"}>
                             {
-                                isDragActive ?
-                                    <p>Drop the file here</p> :
-                                    <p>Click, or drag and drop the comparison file here</p>
+                                file[props.name].preview === upload ?
+                                    [
+                                        isDragActive ?
+                                            <p>Drop the file here</p> :
+                                            <p>Click, or drag and drop the {props.name} file here</p>
+                                    ] :
+                                    "" /* Remove text if image is already uploaded */
                             }
-                            <img src={files['comparisonFile'].preview}
-                                 alt="Upload comparison file"
-                                 onLoad={() => { URL.revokeObjectURL(files['comparisonFile'].preview) }}/>
                         </div>
-                    </form>
+                        <div className={props.name + "Preview"}>
+                            <img className={isDragActive ? "previewDragged" : "preview"}
+                                 src={file[props.name].preview}
+                                 alt={"Upload " + props.name + " file"}
+                                 onLoad={() => { URL.revokeObjectURL(file[props.name].preview) }} />
+                        </div>
+                    </div>
                 )}
             </Dropzone>
-
-            <Dropzone onDrop={(acceptedFiles) => {
-                handleOnDrop('referenceFile', acceptedFiles);
-            }}>
-                {({getRootProps, getInputProps, isDragActive}) => (
-                    <form className={isDragActive ? "   dragged" : "default"} id="fileUploadReference">
-                        <div {...getRootProps()}>
-                            <input {...getInputProps()} />
-                            {
-                                isDragActive ?
-                                    <p>Drop the file here</p> :
-                                    <p>Click, or drag and drop the reference file here</p>
-                            }
-                            <img src={files['referenceFile'].preview}
-                                 alt="Upload reference file"
-                                 onLoad={() => { URL.revokeObjectURL(files['referenceFile'].preview) }}/>
-                        </div>
-                    </form>
-                )}
-            </Dropzone>
+            // Add X button if preview
         </div>
     )
 }

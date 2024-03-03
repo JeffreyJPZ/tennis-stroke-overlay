@@ -1,0 +1,7 @@
+#viewer {
+    grid-column: 2;
+    grid-row: 1;
+
+    outline: 1px solid red;
+    background-color: black;
+}

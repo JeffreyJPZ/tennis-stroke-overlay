@@ -1,0 +1,81 @@
+#navigationMenu {
+    display: flex;
+    position: fixed;
+    top: 0;
+    width: 100%;
+
+    background-color: black;
+    outline: 1px solid red;
+}
+
+#title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ccff00;
+    margin: 0.5em;
+}
+
+.navigationElement {
+    display: flex;
+    margin: 1em;
+}
+
+/**
+ * Styles for tablets
+ */
+@media (min-width: 480px) {
+    #title {
+        font-size: 2em;
+    }
+
+    .navigationElement {
+        margin: 1.5em;
+    }
+}
+
+/**
+ * Styles for large tablets
+ */
+@media (min-width: 768px) {
+    #title {
+        font-size: 2.5em;
+    }
+
+    .navigationElement {
+        margin: 2em;
+    }
+}
+
+/**
+ * Styles for monitors and laptops
+ */
+@media (min-width: 1024px) {
+    #title {
+        font-size: 3em;
+    }
+
+    #navigationMenu {
+        position: static;
+    }
+
+    .navigationElement {
+        margin: 2.5em;
+    }
+}
+
+/**
+ * Styles for large monitors
+ */
+@media (min-width: 1200px) {
+    #title {
+        font-size: 3.5em;
+    }
+
+    #navigationMenu {
+        position: static;
+    }
+
+    .navigationElement {
+        margin: 3em;
+    }
+}
